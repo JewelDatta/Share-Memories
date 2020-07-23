@@ -1,0 +1,9 @@
+Django==2.2.*
+psycopg2
+pytz
+sqlparse
+Pillow
+djangorestframework
+django-cors-headers
+django-allauth
+dj-rest-auth
