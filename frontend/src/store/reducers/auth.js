@@ -30,11 +30,10 @@ const slice = createSlice({
     },
 
     loginSucceed: (state, action) => {
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload.key);
       state.isAuthenticated = true;
       state.isLoading = false;
-      state.token = action.payload.token;
-      state.user = action.payload.user;
+      state.token = action.payload.key;
     },
 
     loginFailed: (state, action) => {
@@ -54,11 +53,10 @@ const slice = createSlice({
     },
 
     registerSucceed: (state, action) => {
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload.key);
       state.isAuthenticated = true;
       state.isLoading = false;
-      state.token = action.payload.token;
-      state.user = action.payload.user;
+      state.token = action.payload.key;
     },
 
     registerFailed: (state, action) => {
@@ -131,6 +129,8 @@ export const login = (username, password) => async (dispatch) => {
       type: loginSucceed.type,
       payload: response.data,
     });
+
+    dispatch(getCurrentUser());
   } catch (error) {
     dispatch(addError(error.response.data, error.response.status));
 
@@ -158,7 +158,9 @@ export const logout = () => async (dispatch, getState) => {
 };
 
 // REGISTER USER
-export const register = ({ username, password, email }) => async (dispatch) => {
+export const register = ({ username, password1, password2, email }) => async (
+  dispatch
+) => {
   try {
     // Headers
     const config = {
@@ -168,7 +170,7 @@ export const register = ({ username, password, email }) => async (dispatch) => {
     };
 
     // Request Body
-    const body = JSON.stringify({ username, email, password });
+    const body = JSON.stringify({ username, email, password1, password2 });
 
     const response = await axios.post(
       "http://localhost:8000/api/auth/registration/",
@@ -180,7 +182,10 @@ export const register = ({ username, password, email }) => async (dispatch) => {
       type: registerSucceed.type,
       payload: response.data,
     });
+
+    dispatch(getCurrentUser());
   } catch (error) {
+    console.log(error);
     dispatch(addError(error.response.data, error.response.status));
 
     dispatch({

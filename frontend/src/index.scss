@@ -1,0 +1,7 @@
+$primary-color: #007bff;
+@import "./assets/card";
+@import "./assets/navbar";
+
+.active {
+  color: $primary-color !important;
+}

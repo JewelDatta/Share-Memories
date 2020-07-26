@@ -1,0 +1,37 @@
+.card {
+  margin-bottom: 2.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  .card {
+    box-shadow: none !important;
+  }
+  // .card-subtitle {
+  //   margin-top: 0.5rem;
+  // }
+  // .card-title {
+  //   font-weight: 500;
+  //   letter-spacing: 0.05rem;
+  //   font-size: 1.32rem;
+  //   margin-bottom: 0.5rem;
+  // }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0;
+    background-color: transparent;
+    .card-title {
+      margin-bottom: 0;
+    }
+  }
+
+  .card-footer {
+    border-top: 1px solid #dae1e7;
+    background-color: inherit;
+  }
+}
