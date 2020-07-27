@@ -14,6 +14,7 @@ import Register from "./components/authentication/Register";
 import { getCurrentUser } from "./store/reducers/auth";
 import HomePage from "./components/HomePage";
 import Alerts from "./components/Alerts";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 const store = configureStore();
 
@@ -31,7 +32,12 @@ class App extends Component {
           <React.Fragment>
             <div className="container">
               <Switch>
-                <Route exact path="/" component={HomePage}></Route>
+                <PrivateRoute
+                  exact
+                  path="/"
+                  component={HomePage}
+                ></PrivateRoute>
+
                 <Route exact path="/register" component={Register}></Route>
                 <Route exact path="/login" component={Login}></Route>
               </Switch>
