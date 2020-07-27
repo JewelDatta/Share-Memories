@@ -8,16 +8,22 @@ import {
   Input,
   CardFooter,
   Form,
+  FormFeedback,
+  FormText,
 } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import Joi from "joi-browser";
 import { login } from "../../store/reducers/auth";
 
 export class Login extends Component {
   state = {
-    username: "",
-    password: "",
+    data: {
+      username: "",
+      password: "",
+    },
+    error: {},
   };
 
   static propTypes = {
@@ -25,18 +31,79 @@ export class Login extends Component {
     isAuthenticated: PropTypes.bool,
   };
 
-  onSubmit = (e) => {
-    e.preventDefault();
+  componentDidUpdate(prevProps) {
+    if (this.props.error.msg !== prevProps.error.msg) {
+      this.setState({ error: this.props.error.msg });
+    }
+  }
 
-    this.props.login(this.state.username, this.state.password);
+  schema = {
+    username: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
   };
 
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  validate = () => {
+    const { error } = Joi.validate(this.state.data, this.schema, {
+      abortEarly: false,
+    });
+
+    if (!error) return null;
+
+    const errors = {};
+    for (let item of error.details) errors[item.path[0]] = item.message;
+
+    return errors;
+  };
+
+  validateProperty = ({ name, value }) => {
+    const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
+  };
+
+  validateOnChange = (input) => {
+    const error = { ...this.state.error };
+
+    if (input.name === "password2") {
+      delete error[input.name];
+      this.setState({ error });
+      return;
+    }
+
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) error[input.name] = errorMessage;
+    else delete error[input.name];
+
+    this.setState({ error });
+  };
+
+  handleChange = ({ currentTarget: input }) => {
+    const data = { ...this.state.data };
+    data[input.name] = input.value;
+
+    // Validate after state is updated
+    this.setState({ data }, () => this.validateOnChange(input));
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errors = this.validate();
+    this.setState({ error: errors || {} });
+    if (errors) return;
+
+    const { username, password } = this.state.data;
+
+    this.props.login(username, password);
+  };
 
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;
     }
+
+    const { error } = this.state;
     return (
       <div className="container">
         <div className="col-sm-12 col-md-6 offset-md-3 pt-4">
@@ -51,8 +118,10 @@ export class Login extends Component {
                     type="text"
                     name="username"
                     placeholder="Username"
-                    onChange={this.onChange}
+                    onChange={this.handleChange}
+                    invalid={error.username ? true : false}
                   />
+                  <FormFeedback>{error.username}</FormFeedback>
                 </FormGroup>
 
                 <FormGroup>
@@ -61,9 +130,17 @@ export class Login extends Component {
                     type="password"
                     name="password"
                     placeholder="Password"
-                    onChange={this.onChange}
+                    onChange={this.handleChange}
+                    invalid={error.password ? true : false}
                   />
+                  <FormFeedback>{error.password}</FormFeedback>
                 </FormGroup>
+
+                <FormText color="danger">
+                  <p style={{ fontWeight: "bold" }}>
+                    {error.non_field_errors && error.non_field_errors.join()}
+                  </p>
+                </FormText>
 
                 <Button
                   className="mt-4"
@@ -71,7 +148,7 @@ export class Login extends Component {
                   size="lg"
                   block
                   type="submit"
-                  onClick={this.onSubmit}
+                  onClick={this.handleSubmit}
                 >
                   Login
                 </Button>
@@ -94,6 +171,7 @@ export class Login extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  error: state.errors,
 });
 
 export default connect(mapStateToProps, { login })(Login);

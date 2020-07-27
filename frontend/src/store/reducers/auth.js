@@ -190,7 +190,6 @@ export const register = ({ username, password1, password2, email }) => async (
 
     dispatch(getCurrentUser());
   } catch (error) {
-    console.log(error);
     dispatch(addError(error.response.data, error.response.status));
 
     dispatch({
