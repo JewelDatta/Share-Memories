@@ -7,6 +7,7 @@ import {
   FormGroup,
   Input,
   CardFooter,
+  Form,
 } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
@@ -56,56 +57,56 @@ export class Register extends Component {
             <CardHeader tag="h2">Sign Up</CardHeader>
 
             <CardBody>
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="text"
-                  name="username"
-                  id="username"
-                  placeholder="Username"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="password"
-                  name="password1"
-                  id="password1"
-                  placeholder="Password"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="password"
-                  name="password2"
-                  id="password2"
-                  placeholder="Confirm Password"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
+              <Form>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="text"
+                    name="username"
+                    id="username"
+                    placeholder="Username"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="password"
+                    name="password1"
+                    placeholder="Password"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="password"
+                    name="password2"
+                    placeholder="Confirm Password"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
 
-              <Button
-                className="mt-4"
-                color="primary"
-                size="lg"
-                block
-                onClick={this.onSubmit}
-              >
-                Sign Up
-              </Button>
+                <Button
+                  className="mt-4"
+                  color="primary"
+                  size="lg"
+                  block
+                  type="submit"
+                  onClick={this.onSubmit}
+                >
+                  Sign Up
+                </Button>
+              </Form>
             </CardBody>
             <CardFooter>
               Already have an account?

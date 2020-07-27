@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { addError } from "./errors";
+import { createMessage } from "./messages";
 
 const slice = createSlice({
   name: "auth",
@@ -99,7 +100,7 @@ export const getCurrentUser = () => async (dispatch, getState) => {
       payload: response.data,
     });
   } catch (error) {
-    dispatch(addError(error.response.data, error.response.status));
+    // dispatch(addError(error.response.data, error.response.status));
 
     dispatch({
       type: authFailed.type,
@@ -182,6 +183,10 @@ export const register = ({ username, password1, password2, email }) => async (
       type: registerSucceed.type,
       payload: response.data,
     });
+
+    dispatch(
+      createMessage({ successfulRegistration: "User registered successfully." })
+    );
 
     dispatch(getCurrentUser());
   } catch (error) {

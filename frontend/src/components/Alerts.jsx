@@ -13,8 +13,13 @@ export class Alerts extends Component {
     const { error, message } = this.props;
 
     if (error !== prevProps.error) {
-      if (error.msg.username) toast.error(error.msg.username.join());
+      if (error.msg.username)
+        toast.error(`Username: ${error.msg.username.join()}`);
       if (error.msg.email) toast.error(`Email: ${error.msg.email.join()}`);
+      if (error.msg.password)
+        toast.error(`Password: ${error.msg.password.join()}`);
+      if (error.msg.password1)
+        toast.error(`Password: ${error.msg.password1.join()}`);
       if (error.msg.message)
         toast.error(`Message: ${error.msg.message.join()}`);
       if (error.msg.detail) toast.error(`Message: ${error.msg.detail}`);
@@ -24,6 +29,8 @@ export class Alerts extends Component {
 
     if (message !== prevProps.message) {
       if (message.passwordNotMatch) toast.error(message.passwordNotMatch);
+      if (message.successfulRegistration)
+        toast.success(message.successfulRegistration);
     }
   }
 

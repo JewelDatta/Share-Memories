@@ -7,6 +7,7 @@ import {
   FormGroup,
   Input,
   CardFooter,
+  Form,
 } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
@@ -43,37 +44,38 @@ export class Login extends Component {
             <CardHeader tag="h2">Login</CardHeader>
 
             <CardBody>
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="text"
-                  name="username"
-                  id="username"
-                  placeholder="Username"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
+              <Form>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
 
-              <FormGroup>
-                <Input
-                  bsSize="lg"
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  onChange={this.onChange}
-                />
-              </FormGroup>
+                <FormGroup>
+                  <Input
+                    bsSize="lg"
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={this.onChange}
+                  />
+                </FormGroup>
 
-              <Button
-                className="mt-4"
-                color="primary"
-                size="lg"
-                block
-                onClick={this.onSubmit}
-              >
-                Login
-              </Button>
+                <Button
+                  className="mt-4"
+                  color="primary"
+                  size="lg"
+                  block
+                  type="submit"
+                  onClick={this.onSubmit}
+                >
+                  Login
+                </Button>
+              </Form>
             </CardBody>
             <CardFooter>
               Don't have an account?
