@@ -16,8 +16,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { register } from "../../store/reducers/auth";
 import { createMessage } from "../../store/reducers/messages";
+import ValidateForm from "../common/ValidateForm";
 
-export class Register extends Component {
+export class Register extends ValidateForm {
   state = {
     data: {
       username: "",
@@ -50,57 +51,7 @@ export class Register extends Component {
       .label("Confirm Password"),
   };
 
-  validate = () => {
-    const { error } = Joi.validate(this.state.data, this.schema, {
-      abortEarly: false,
-    });
-
-    if (!error) return null;
-
-    const errors = {};
-    for (let item of error.details) errors[item.path[0]] = item.message;
-
-    return errors;
-  };
-
-  validateProperty = ({ name, value }) => {
-    const obj = { [name]: value };
-    const schema = { [name]: this.schema[name] };
-    const { error } = Joi.validate(obj, schema);
-    return error ? error.details[0].message : null;
-  };
-
-  validateOnChange = (input) => {
-    const error = { ...this.state.error };
-
-    if (input.name === "password2") {
-      delete error[input.name];
-      this.setState({ error });
-      return;
-    }
-
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) error[input.name] = errorMessage;
-    else delete error[input.name];
-
-    this.setState({ error });
-  };
-
-  handleChange = ({ currentTarget: input }) => {
-    const data = { ...this.state.data };
-    data[input.name] = input.value;
-
-    // Validate after state is updated
-    this.setState({ data }, () => this.validateOnChange(input));
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    const errors = this.validate();
-    this.setState({ error: errors || {} });
-    if (errors) return;
-
+  doSubmit = () => {
     const { username, email, password1, password2 } = this.state.data;
     const newUser = {
       username,
@@ -108,6 +59,7 @@ export class Register extends Component {
       password2,
       email,
     };
+
     this.props.register(newUser);
   };
 
