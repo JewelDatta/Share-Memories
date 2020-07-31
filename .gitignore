@@ -9,6 +9,7 @@ db.sqlite3-journal
 media
 
 
+
 ### react ###
 .DS_*
 *.log
