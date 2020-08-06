@@ -21,6 +21,7 @@ export class Alerts extends Component {
     if (message !== prevProps.message) {
       if (message.successfulRegistration)
         toast.success(message.successfulRegistration);
+      if (message.success) toast.success(message.success);
     }
   }
 

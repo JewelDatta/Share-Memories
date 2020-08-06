@@ -1,0 +1,14 @@
+$primary-color: #007bff;
+
+.active {
+  color: $primary-color !important;
+}
+
+#root {
+  background-color: #f8f8f8;
+}
+
+.content {
+  padding-top: 90px;
+  height: 100vh;
+}
