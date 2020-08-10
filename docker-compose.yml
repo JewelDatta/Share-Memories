@@ -23,7 +23,7 @@ services:
     command: npm start
     volumes:
       - ./frontend:/frontend/code
-      - node-modules:/frontend/code/node_modules
+      - frontend/code/node_modules
     ports:
       - "3000:3000"
     stdin_open: true
@@ -32,4 +32,3 @@ services:
 
 volumes:
   postgres_data:
-  node-modules:
