@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   Card,
   Button,
@@ -47,6 +47,10 @@ export class Login extends ValidateForm {
     const { username, password } = this.state.data;
 
     this.props.login(username, password);
+
+    this.props.history.replace("/");
+    // const { state } = this.props.location;
+    // window.location = state ? state.from.pathname : "/";
   };
 
   render() {

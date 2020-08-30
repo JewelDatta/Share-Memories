@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import Joi from "joi-browser";
 
 export class ValidateForm extends Component {

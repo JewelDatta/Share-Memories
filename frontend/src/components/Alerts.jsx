@@ -22,6 +22,7 @@ export class Alerts extends Component {
       if (message.successfulRegistration)
         toast.success(message.successfulRegistration);
       if (message.success) toast.success(message.success);
+      if (message.fail) toast.success(message.success);
     }
   }
 

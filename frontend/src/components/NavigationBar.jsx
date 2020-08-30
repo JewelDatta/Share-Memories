@@ -11,12 +11,17 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  InputGroup,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
 } from "reactstrap";
-import { NavLink as RRNavLink } from "react-router-dom";
+import { NavLink as RRNavLink, Link } from "react-router-dom";
 import { User, Home } from "react-feather";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../store/reducers/auth";
+import { withRouter } from "react-router-dom";
 
 export class NavigationBar extends Component {
   static propTypes = {
@@ -25,6 +30,7 @@ export class NavigationBar extends Component {
   };
 
   state = {
+    keyword: "",
     isOpen: false,
   };
 
@@ -32,11 +38,54 @@ export class NavigationBar extends Component {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
+  handleSearchTextChange = (event) => {
+    this.setState({ keyword: event.target.value });
+  };
+
+  handleSearchKeyPress = (event) => {
+    const { keyword } = this.state;
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (keyword !== "") {
+        this.props.history.push(`/search?username=${keyword}`);
+      }
+    }
+  };
+
+  onSearchClick = () => {
+    const { keyword } = this.state;
+    if (keyword !== "") {
+      this.props.history.push(`/search?username=${keyword}`);
+    }
+  };
+
   render() {
+    const { username } = this.props.auth.user;
+    const { keyword } = this.state;
+
     return (
       <Navbar color="faded" light expand="md" fixed="top">
         <NavbarBrand href="/">Share Memory</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
+        <div>
+          <InputGroup>
+            <Input
+              placeholder="Search User"
+              value={keyword}
+              onChange={this.handleSearchTextChange}
+              onKeyPress={this.handleSearchKeyPress}
+            />
+            <InputGroupAddon addonType="append">
+              <InputGroupText
+                style={{ cursor: "pointer" }}
+                onClick={this.onSearchClick}
+              >
+                Search
+              </InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
+
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
@@ -50,8 +99,10 @@ export class NavigationBar extends Component {
                 <User size={23} />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Option 1</DropdownItem>
-                <DropdownItem>Option 2</DropdownItem>
+                <DropdownItem tag={Link} to={`/profile/${username}`}>
+                  Profile
+                </DropdownItem>
+
                 <DropdownItem divider />
                 <DropdownItem onClick={this.props.logout}>Logout</DropdownItem>
               </DropdownMenu>
@@ -67,4 +118,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logout })(NavigationBar);
+export default withRouter(connect(mapStateToProps, { logout })(NavigationBar));

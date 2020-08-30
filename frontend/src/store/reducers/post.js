@@ -14,10 +14,14 @@ const slice = createSlice({
     postAdded: (post, action) => {
       post.list.push(action.payload);
     },
+
+    postsLoaded: (post, action) => {
+      post.list = action.payload;
+    },
   },
 });
 
-const { postAdded } = slice.actions;
+const { postAdded, postsLoaded } = slice.actions;
 export default slice.reducer;
 
 export const addPost = (data) => async (dispatch, getState) => {
@@ -45,5 +49,21 @@ export const addPost = (data) => async (dispatch, getState) => {
     dispatch(createMessage({ success: "New Post Added." }));
   } catch (error) {
     dispatch(addError(error.response.data, error.response.status));
+  }
+};
+
+export const loadPosts = () => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8000/api/post/",
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: postsLoaded.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(createMessage({ fail: "Failed to load Posts." }));
   }
 };

@@ -30,10 +30,13 @@ const slice = createSlice({
       state.user = null;
     },
 
+    loginRequested: (state, action) => {
+      state.isLoading = true; // set true after loading user
+    },
+
     loginSucceed: (state, action) => {
       localStorage.setItem("token", action.payload.key);
       state.isAuthenticated = true;
-      state.isLoading = false;
       state.token = action.payload.key;
     },
 
@@ -79,6 +82,7 @@ const {
   logoutSucceed,
   registerSucceed,
   registerFailed,
+  loginRequested,
 } = slice.actions;
 
 export default slice.reducer;
@@ -110,6 +114,10 @@ export const getCurrentUser = () => async (dispatch, getState) => {
 
 // LOGIN USER
 export const login = (username, password) => async (dispatch) => {
+  dispatch({
+    type: loginRequested.type,
+  });
+
   try {
     // Headers
     const config = {
