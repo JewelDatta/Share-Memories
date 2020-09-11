@@ -43,10 +43,10 @@ export class Login extends ValidateForm {
     password: Joi.string().required().label("Password"),
   };
 
-  doSubmit = () => {
+  doSubmit = async () => {
     const { username, password } = this.state.data;
 
-    this.props.login(username, password);
+    await this.props.login(username, password);
 
     this.props.history.replace("/");
     // const { state } = this.props.location;

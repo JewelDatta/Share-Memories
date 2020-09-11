@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import configureStore from "./store/configureStore";
-import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Login from "./components/authentication/Login";
@@ -12,17 +10,12 @@ import Alerts from "./components/Alerts";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Profile from "./components/profile/Profile";
 import SearchPage from "./components/others/SearchPage";
-
-const store = configureStore();
+import { connect } from "react-redux";
 
 class App extends Component {
-  componentDidMount() {
-    store.dispatch(getCurrentUser());
-  }
-
   render() {
     return (
-      <Provider store={store}>
+      <React.Fragment>
         <ToastContainer></ToastContainer>
         <Alerts></Alerts>
         <Router forceRefresh>
@@ -47,9 +40,13 @@ class App extends Component {
             </div>
           </React.Fragment>
         </Router>
-      </Provider>
+      </React.Fragment>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { getCurrentUser })(App);

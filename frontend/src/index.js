@@ -6,10 +6,22 @@ import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.scss";
+import configureStore from "./store/configureStore";
+import { Provider } from "react-redux";
+import { getCurrentUser } from "./store/reducers/auth";
+
+const store = configureStore();
+
+const token = localStorage.getItem("token");
+if (token) {
+  store.dispatch(getCurrentUser());
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
