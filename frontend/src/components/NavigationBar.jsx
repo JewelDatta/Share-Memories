@@ -59,7 +59,16 @@ export class NavigationBar extends Component {
     }
   };
 
+  handleLogOut = async () => {
+    const { history, logout } = this.props;
+    await logout();
+    history.push("/login");
+  };
+
   render() {
+    if (!this.props.auth.user) {
+      return <React.Fragment></React.Fragment>;
+    }
     const { username } = this.props.auth.user;
     const { keyword } = this.state;
 
@@ -104,7 +113,7 @@ export class NavigationBar extends Component {
                 </DropdownItem>
 
                 <DropdownItem divider />
-                <DropdownItem onClick={this.props.logout}>Logout</DropdownItem>
+                <DropdownItem onClick={this.handleLogOut}>Logout</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
