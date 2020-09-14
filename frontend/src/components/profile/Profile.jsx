@@ -5,8 +5,11 @@ import { connect } from "react-redux";
 import ProfileHeader from "./ProfileHeader";
 import AboutCard from "./AboutCard";
 import NavigationBar from "../NavigationBar";
-import { loadPosts } from "../../store/reducers/post";
-import { getCurrentUserInfo } from "../../store/reducers/user";
+import { loadPosts, loadPostsByUsername } from "../../store/reducers/post";
+import {
+  getCurrentUserInfo,
+  getUserInfoByUsername,
+} from "../../store/reducers/user";
 import PostView from "../post/PostView";
 
 export class Profile extends Component {
@@ -15,11 +18,21 @@ export class Profile extends Component {
   };
 
   componentDidMount() {
-    const { auth, loadPosts, match, getCurrentUserInfo } = this.props;
+    const {
+      auth,
+      loadPosts,
+      match,
+      getCurrentUserInfo,
+      loadPostsByUsername,
+      getUserInfoByUsername,
+    } = this.props;
 
     if (auth.user.username === match.params.username) {
       loadPosts();
       getCurrentUserInfo();
+    } else {
+      loadPostsByUsername(match.params.username);
+      getUserInfoByUsername(match.params.username);
     }
   }
 
@@ -72,9 +85,9 @@ const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadPosts: () => dispatch(loadPosts()),
-  getCurrentUserInfo: () => dispatch(getCurrentUserInfo()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, {
+  loadPosts,
+  loadPostsByUsername,
+  getCurrentUserInfo,
+  getUserInfoByUsername,
+})(Profile);

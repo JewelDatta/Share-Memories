@@ -67,3 +67,19 @@ export const loadPosts = () => async (dispatch, getState) => {
     dispatch(createMessage({ fail: "Failed to load Posts." }));
   }
 };
+
+export const loadPostsByUsername = (username) => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8000/api/post/${username}`,
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: postsLoaded.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(createMessage({ fail: "Failed to load Posts." }));
+  }
+};

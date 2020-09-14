@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from .models import User
 from .serializers import UserSerializer
+from django.shortcuts import get_object_or_404
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -18,7 +19,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def search_users_by_username(self, request, username, *args, **kwargs):
-        print(username)
         queryset_result = User.objects.filter(username__contains=username)
         serializer = UserSerializer(queryset_result, many=True)
+        return Response(serializer.data)
+
+    def get_user_by_username(self, request, username):
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user, context={'request': request})
         return Response(serializer.data)

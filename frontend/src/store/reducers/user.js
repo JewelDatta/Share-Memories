@@ -62,6 +62,31 @@ export const getCurrentUserInfo = () => async (dispatch, getState) => {
   }
 };
 
+export const getUserInfoByUsername = (username) => async (
+  dispatch,
+  getState
+) => {
+  dispatch({
+    type: userLoadRequested.type,
+  });
+
+  try {
+    const response = await axios.get(
+      `http://localhost:8000/api/user/${username}`,
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: userLoadSucceed.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: userLoadFailed.type,
+    });
+  }
+};
+
 export const searchUser = (keyword) => async (dispatch, getState) => {
   dispatch({
     type: userLoadRequested.type,
