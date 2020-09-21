@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { tokenConfig } from "./auth";
-// import { addError } from "./errors";
+import { addError } from "./errors";
 
 const slice = createSlice({
   name: "user",
@@ -106,5 +106,27 @@ export const searchUser = (keyword) => async (dispatch, getState) => {
     dispatch({
       type: userLoadFailed.type,
     });
+  }
+};
+
+export const followUser = (username) => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8000/api/user/follow/${username}`,
+      tokenConfig(getState)
+    );
+  } catch (error) {
+    dispatch(addError("Failed to follow", error.response.status));
+  }
+};
+
+export const unfollowUser = (username) => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8000/api/user/unfollow/${username}`,
+      tokenConfig(getState)
+    );
+  } catch (error) {
+    dispatch(addError("Failed to unfollow", error.response.status));
   }
 };

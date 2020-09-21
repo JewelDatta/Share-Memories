@@ -9,6 +9,8 @@ import { loadPosts, loadPostsByUsername } from "../../store/reducers/post";
 import {
   getCurrentUserInfo,
   getUserInfoByUsername,
+  followUser,
+  unfollowUser,
 } from "../../store/reducers/user";
 import PostView from "../post/PostView";
 
@@ -36,8 +38,20 @@ export class Profile extends Component {
     }
   }
 
+  handleFollow = () => {
+    const { followUser, match } = this.props;
+    followUser(match.params.username);
+    window.location.reload();
+  };
+
+  handleUnfollow = () => {
+    const { unfollowUser, match } = this.props;
+    unfollowUser(match.params.username);
+    window.location.reload();
+  };
+
   render() {
-    const { user, posts } = this.props;
+    const { user, posts, auth, match } = this.props;
     return (
       <React.Fragment>
         <NavigationBar></NavigationBar>
@@ -46,7 +60,12 @@ export class Profile extends Component {
             <Row>
               <Col sm="12">
                 {!user.isLoading && user.data && (
-                  <ProfileHeader user={this.props.user}></ProfileHeader>
+                  <ProfileHeader
+                    user={this.props.user}
+                    isSelf={auth.user.username === match.params.username}
+                    handleFollow={this.handleFollow}
+                    handleUnfollow={this.handleUnfollow}
+                  ></ProfileHeader>
                 )}
               </Col>
             </Row>
@@ -90,4 +109,6 @@ export default connect(mapStateToProps, {
   loadPostsByUsername,
   getCurrentUserInfo,
   getUserInfoByUsername,
+  followUser,
+  unfollowUser,
 })(Profile);
