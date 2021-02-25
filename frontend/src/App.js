@@ -18,7 +18,7 @@ class App extends Component {
       <React.Fragment>
         <ToastContainer></ToastContainer>
         <Alerts></Alerts>
-        <Router forceRefresh>
+        <Router>
           <React.Fragment>
             <div className="container">
               <Route exact path="/register" component={Register}></Route>

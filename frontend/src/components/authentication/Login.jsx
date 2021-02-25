@@ -46,9 +46,8 @@ export class Login extends ValidateForm {
   doSubmit = async () => {
     const { username, password } = this.state.data;
 
-    await this.props.login(username, password);
-
-    this.props.history.replace("/");
+    const res = await this.props.login(username, password);
+    if (this.props.isAuthenticated) this.props.history.replace("/");
     // const { state } = this.props.location;
     // window.location = state ? state.from.pathname : "/";
   };

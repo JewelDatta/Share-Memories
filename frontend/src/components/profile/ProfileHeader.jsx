@@ -40,6 +40,9 @@ class ProfileHeader extends React.Component {
                 className="img-fluid img-border rounded-circle box-shadow-1"
               />
             </div>
+            <div style={{ paddingLeft: "25%", paddingTop: "50px" }}>
+              <b>{data.username}</b>{" "}
+            </div>
 
             <div>
               {!isSelf && (

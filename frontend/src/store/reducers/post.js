@@ -7,21 +7,43 @@ import { tokenConfig } from "./auth";
 const slice = createSlice({
   name: "post",
   initialState: {
-    isLoading: false,
-    list: [],
+    profilePost: {
+      isLoading: false,
+      list: [],
+      next: null,
+      previous: null,
+    },
   },
   reducers: {
-    postAdded: (post, action) => {
-      post.list.push(action.payload);
+    profilePostAdded: (post, action) => {
+      post.profilePost.list.push(action.payload);
     },
 
-    postsLoaded: (post, action) => {
-      post.list = action.payload;
+    profilePostsLoaded: (post, action) => {
+      post.profilePost.list = action.payload.results;
+      post.profilePost.previous = action.payload.previous;
+      post.profilePost.next = action.payload.next;
+    },
+    moreProfilePostsLoaded: (post, action) => {
+      post.profilePost.list.push(...action.payload.results);
+      post.profilePost.previous = action.payload.previous;
+      post.profilePost.next = action.payload.next;
+    },
+    profilePostFetchFailed: (post, action) => {
+      post.profilePost.isLoading = false;
+      post.profilePost.list = [];
+      post.profilePost.next = null;
+      post.profilePost.previous = null;
     },
   },
 });
 
-const { postAdded, postsLoaded } = slice.actions;
+const {
+  profilePostAdded,
+  profilePostsLoaded,
+  moreProfilePostsLoaded,
+  profilePostFetchFailed,
+} = slice.actions;
 export default slice.reducer;
 
 export const addPost = (data) => async (dispatch, getState) => {
@@ -42,29 +64,13 @@ export const addPost = (data) => async (dispatch, getState) => {
       config
     );
     dispatch({
-      type: postAdded.type,
+      type: profilePostAdded.type,
       payload: response.data,
     });
 
     dispatch(createMessage({ success: "New Post Added." }));
   } catch (error) {
     dispatch(addError(error.response.data, error.response.status));
-  }
-};
-
-export const loadPosts = () => async (dispatch, getState) => {
-  try {
-    const response = await axios.get(
-      "http://localhost:8000/api/post/",
-      tokenConfig(getState)
-    );
-
-    dispatch({
-      type: postsLoaded.type,
-      payload: response.data,
-    });
-  } catch (error) {
-    dispatch(createMessage({ fail: "Failed to load Posts." }));
   }
 };
 
@@ -76,10 +82,25 @@ export const loadPostsByUsername = (username) => async (dispatch, getState) => {
     );
 
     dispatch({
-      type: postsLoaded.type,
+      type: profilePostsLoaded.type,
       payload: response.data,
     });
   } catch (error) {
     dispatch(createMessage({ fail: "Failed to load Posts." }));
+    dispatch({ type: profilePostFetchFailed.type });
+  }
+};
+
+export const loadMorePostsByUsername = (url) => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(url, tokenConfig(getState));
+
+    dispatch({
+      type: moreProfilePostsLoaded.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(createMessage({ fail: "Failed to load Posts." }));
+    dispatch({ type: profilePostFetchFailed.type });
   }
 };

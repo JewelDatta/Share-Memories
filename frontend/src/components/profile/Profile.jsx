@@ -5,9 +5,12 @@ import { connect } from "react-redux";
 import ProfileHeader from "./ProfileHeader";
 import AboutCard from "./AboutCard";
 import NavigationBar from "../NavigationBar";
-import { loadPosts, loadPostsByUsername } from "../../store/reducers/post";
+import InfiniteScroll from "react-infinite-scroller";
 import {
-  getCurrentUserInfo,
+  loadPostsByUsername,
+  loadMorePostsByUsername,
+} from "../../store/reducers/post";
+import {
   getUserInfoByUsername,
   followUser,
   unfollowUser,
@@ -22,19 +25,18 @@ export class Profile extends Component {
   componentDidMount() {
     const {
       auth,
-      loadPosts,
       match,
-      getCurrentUserInfo,
       loadPostsByUsername,
       getUserInfoByUsername,
     } = this.props;
 
-    if (auth.user.username === match.params.username) {
-      loadPosts();
-      getCurrentUserInfo();
-    } else {
-      loadPostsByUsername(match.params.username);
-      getUserInfoByUsername(match.params.username);
+    loadPostsByUsername(match.params.username);
+    getUserInfoByUsername(match.params.username);
+  }
+
+  componentWillUpdate(prevProps) {
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      window.location.reload();
     }
   }
 
@@ -50,13 +52,19 @@ export class Profile extends Component {
     window.location.reload();
   };
 
+  loadMorePosts = () => {
+    console.log("load more");
+  };
+
   render() {
     const { user, posts, auth, match } = this.props;
+
     return (
       <React.Fragment>
         <NavigationBar></NavigationBar>
         <div className="content">
           <div id="user-profile">
+            {/* user profile header section */}
             <Row>
               <Col sm="12">
                 {!user.isLoading && user.data && (
@@ -70,6 +78,7 @@ export class Profile extends Component {
               </Col>
             </Row>
 
+            {/* user about section */}
             <div id="profile-info">
               <Row>
                 {!user.isLoading && user.data && (
@@ -78,17 +87,51 @@ export class Profile extends Component {
                   </Col>
                 )}
 
-                <Col md="12" lg={{ size: 6 }}>
+                {/* render all posts */}
+                {!user.isLoading &&
+                  user.data &&
+                  !posts.isLoading &&
+                  posts.list && (
+                    <Col md="12" lg={{ size: 6 }}>
+                      <InfiniteScroll
+                        pageStart={0}
+                        loadMore={() =>
+                          this.props.loadMorePostsByUsername(posts.next)
+                        }
+                        hasMore={posts.next !== null}
+                        loader={
+                          <div
+                            key={user.data.username}
+                            className="spinner-border text-primary m-5"
+                            role="status"
+                          >
+                            <span className="sr-only">Loading...</span>
+                          </div>
+                        }
+                      >
+                        {posts.list.map((post) => (
+                          <PostView
+                            key={post.id}
+                            post={post}
+                            authorImage={this.props.user.data.profile_image}
+                          ></PostView>
+                        ))}
+                      </InfiniteScroll>
+                    </Col>
+                  )}
+
+                {/* <Col md="12" lg={{ size: 6 }}>
                   {!user.isLoading &&
                     user.data &&
-                    this.props.posts.map((post) => (
+                    posts &&
+                    posts.map((post) => (
                       <PostView
                         key={post.id}
                         post={post}
                         authorImage={this.props.user.data.profile_image}
                       ></PostView>
                     ))}
-                </Col>
+                </Col> */}
               </Row>
             </div>
           </div>
@@ -99,16 +142,15 @@ export class Profile extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  posts: state.post.list,
+  posts: state.post.profilePost,
   auth: state.auth,
   user: state.user,
 });
 
 export default connect(mapStateToProps, {
-  loadPosts,
   loadPostsByUsername,
-  getCurrentUserInfo,
   getUserInfoByUsername,
   followUser,
   unfollowUser,
+  loadMorePostsByUsername,
 })(Profile);

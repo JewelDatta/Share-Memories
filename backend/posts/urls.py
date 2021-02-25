@@ -3,7 +3,6 @@ from .views import PostViewSet
 
 urlpatterns = [
     path("", PostViewSet.as_view({
-        "get": "list",
         "post": "create",
     })),
     path("<str:username>",

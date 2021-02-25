@@ -40,27 +40,27 @@ const {
 export default slice.reducer;
 
 // Get current logged in user info
-export const getCurrentUserInfo = () => async (dispatch, getState) => {
-  dispatch({
-    type: userLoadRequested.type,
-  });
+// export const getCurrentUserInfo = () => async (dispatch, getState) => {
+//   dispatch({
+//     type: userLoadRequested.type,
+//   });
 
-  try {
-    const response = await axios.get(
-      "http://localhost:8000/api/user/",
-      tokenConfig(getState)
-    );
+//   try {
+//     const response = await axios.get(
+//       "http://localhost:8000/api/user/",
+//       tokenConfig(getState)
+//     );
 
-    dispatch({
-      type: userLoadSucceed.type,
-      payload: response.data,
-    });
-  } catch (error) {
-    dispatch({
-      type: userLoadFailed.type,
-    });
-  }
-};
+//     dispatch({
+//       type: userLoadSucceed.type,
+//       payload: response.data,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: userLoadFailed.type,
+//     });
+//   }
+// };
 
 export const getUserInfoByUsername = (username) => async (
   dispatch,

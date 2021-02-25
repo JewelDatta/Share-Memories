@@ -192,9 +192,7 @@ export const register = ({ username, password1, password2, email }) => async (
       payload: response.data,
     });
 
-    dispatch(
-      createMessage({ successfulRegistration: "User registered successfully." })
-    );
+    dispatch(createMessage({ success: "User registered successfully." }));
 
     dispatch(getCurrentUser());
   } catch (error) {

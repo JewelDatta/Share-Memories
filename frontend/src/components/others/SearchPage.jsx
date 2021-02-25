@@ -22,6 +22,12 @@ class SearchPage extends Component {
     this.props.searchUser(keyword);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      const keyword = queryString.parse(this.props.location.search).username;
+      this.props.searchUser(keyword);
+    }
+  }
   render() {
     return (
       <React.Fragment>
