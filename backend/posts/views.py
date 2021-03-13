@@ -50,7 +50,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if (not isFriend):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        queryset = Post.objects.filter(creator=user)
+        queryset = Post.objects.filter(creator=user).order_by('-created_at')
         page = self.paginate_queryset(queryset)
 
         serializer = PostSerializer(page,

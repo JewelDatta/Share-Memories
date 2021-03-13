@@ -68,3 +68,20 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def get_friends(self, request):
+        """ get following and follwers list of current logged in user """
+
+        followers_serializer = Friend.objects.filter(user_to=request.user)
+        followings_serializer = Friend.objects.filter(user_from=request.user)
+
+        followers = []
+        followings = []
+
+        for f in followers_serializer:
+            followers.append(f.user_from.username)
+
+        for f in followings_serializer:
+            followings.append(f.user_to.username)
+
+        return Response({"followers": followers, "followings": followings})

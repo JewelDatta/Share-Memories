@@ -11,6 +11,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import Profile from "./components/profile/Profile";
 import SearchPage from "./components/others/SearchPage";
 import { connect } from "react-redux";
+import Friends from "./components/others/Friends";
 
 class App extends Component {
   render() {
@@ -34,6 +35,12 @@ class App extends Component {
                 exact
                 path="/search"
                 component={SearchPage}
+              ></PrivateRoute>
+
+              <PrivateRoute
+                exact
+                path="/friends"
+                component={Friends}
               ></PrivateRoute>
 
               <PrivateRoute exact path="/" component={HomePage}></PrivateRoute>

@@ -9,6 +9,8 @@ const slice = createSlice({
     isLoading: false,
     data: null,
     list: [],
+    followers: [],
+    followings: [],
   },
   reducers: {
     userLoadRequested: (state, action) => {
@@ -19,13 +21,18 @@ const slice = createSlice({
       state.isLoading = false;
       state.data = action.payload;
     },
-    usersLoadSucceed: (state, action) => {
+    userSearchSucceed: (state, action) => {
       state.isLoading = false;
       state.list = action.payload;
     },
     userLoadFailed: (state, action) => {
       state.isLoading = false;
       state.data = null;
+    },
+
+    friendsLoadSucceed: (state, action) => {
+      state.followers = action.payload.followers;
+      state.followings = action.payload.followings;
     },
   },
 });
@@ -34,7 +41,8 @@ const {
   userLoadRequested,
   userLoadSucceed,
   userLoadFailed,
-  usersLoadSucceed,
+  userSearchSucceed,
+  friendsLoadSucceed,
 } = slice.actions;
 
 export default slice.reducer;
@@ -99,7 +107,7 @@ export const searchUser = (keyword) => async (dispatch, getState) => {
     );
 
     dispatch({
-      type: usersLoadSucceed.type,
+      type: userSearchSucceed.type,
       payload: response.data,
     });
   } catch (error) {
@@ -128,5 +136,21 @@ export const unfollowUser = (username) => async (dispatch, getState) => {
     );
   } catch (error) {
     dispatch(addError("Failed to unfollow", error.response.status));
+  }
+};
+
+export const getFriends = () => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8000/api/user/friends",
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: friendsLoadSucceed.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(addError("Failed to get friends", error.response.status));
   }
 };

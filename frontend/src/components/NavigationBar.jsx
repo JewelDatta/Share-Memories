@@ -17,7 +17,7 @@ import {
   InputGroupText,
 } from "reactstrap";
 import { NavLink as RRNavLink, Link } from "react-router-dom";
-import { User, Home } from "react-feather";
+import { User, Home, Users } from "react-feather";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../store/reducers/auth";
@@ -100,6 +100,12 @@ export class NavigationBar extends Component {
             <NavItem>
               <NavLink tag={RRNavLink} exact to="/">
                 <Home size={23} />
+              </NavLink>
+            </NavItem>
+
+            <NavItem>
+              <NavLink tag={RRNavLink} exact to="/friends">
+                <Users size={23} />
               </NavLink>
             </NavItem>
 
