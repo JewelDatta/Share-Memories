@@ -52,10 +52,6 @@ export class Profile extends Component {
     window.location.reload();
   };
 
-  loadMorePosts = () => {
-    console.log("load more");
-  };
-
   render() {
     const { user, posts, auth, match } = this.props;
 
@@ -101,7 +97,7 @@ export class Profile extends Component {
                         hasMore={posts.next !== null}
                         loader={
                           <div
-                            key={user.data.username}
+                            key={0}
                             className="spinner-border text-primary m-5"
                             role="status"
                           >

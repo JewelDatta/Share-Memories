@@ -1,14 +1,12 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from posts.models import Post
-from users.models import User, Friend
+from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 
 from .serializers import PostSerializer
 from users.serializers import UserSerializer
-
-from django.shortcuts import get_object_or_404
-
-from rest_framework.pagination import PageNumberPagination
+from posts.models import Post
+from users.models import User, Friend
 
 
 class PostPagination(PageNumberPagination):
@@ -55,6 +53,22 @@ class PostViewSet(viewsets.ModelViewSet):
         queryset = Post.objects.filter(creator=user)
         page = self.paginate_queryset(queryset)
 
+        serializer = PostSerializer(page,
+                                    many=True,
+                                    context={'request': request})
+
+        return self.get_paginated_response(serializer.data)
+
+    def get_feed_posts(self, request):
+        """ get all feed post of current user """
+
+        feed_posts = self.get_queryset()
+
+        followings = Friend.objects.filter(user_from=request.user)
+        for following in followings:
+            feed_posts |= Post.objects.filter(creator=following.user_to)
+
+        page = self.paginate_queryset(feed_posts)
         serializer = PostSerializer(page,
                                     many=True,
                                     context={'request': request})

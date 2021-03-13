@@ -13,7 +13,7 @@ import defaultProfilePic from "../../assets/img/profile.png";
 
 class PostView extends React.Component {
   render() {
-    const { post, authorImage } = this.props;
+    const { post } = this.props;
 
     return (
       <React.Fragment>
@@ -22,7 +22,7 @@ class PostView extends React.Component {
             <div className="d-flex justify-content-start align-items-center mb-1">
               <div className="avatar mr-1">
                 <img
-                  src={authorImage || defaultProfilePic}
+                  src={post.author_image || defaultProfilePic}
                   alt="profile pic"
                   height="45"
                   width="45"

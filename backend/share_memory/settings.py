@@ -152,3 +152,6 @@ ACCOUNT_AUTHENTICATION_METHOD = "username"
 
 # Custom user model
 AUTH_USER_MODEL = 'users.User'
+
+# Host
+APP_HOST = os.environ.get("APP_HOST", "http://localhost:8000")

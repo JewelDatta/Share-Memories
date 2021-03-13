@@ -13,10 +13,17 @@ const slice = createSlice({
       next: null,
       previous: null,
     },
+    feedPost: {
+      isLoading: false,
+      list: [],
+      next: null,
+      previous: null,
+    },
   },
   reducers: {
-    profilePostAdded: (post, action) => {
-      post.profilePost.list.push(action.payload);
+    postCreated: (post, action) => {
+      post.profilePost.list.unshift(action.payload);
+      post.feedPost.list.unshift(action.payload);
     },
 
     profilePostsLoaded: (post, action) => {
@@ -35,14 +42,35 @@ const slice = createSlice({
       post.profilePost.next = null;
       post.profilePost.previous = null;
     },
+
+    feedPostsLoaded: (post, action) => {
+      post.feedPost.list = action.payload.results;
+      post.feedPost.previous = action.payload.previous;
+      post.feedPost.next = action.payload.next;
+    },
+    morefeedPostsLoaded: (post, action) => {
+      post.feedPost.list.push(...action.payload.results);
+      post.feedPost.previous = action.payload.previous;
+      post.feedPost.next = action.payload.next;
+    },
+    feedPostFetchFailed: (post, action) => {
+      post.feedPost.isLoading = false;
+      post.feedPost.list = [];
+      post.feedPost.next = null;
+      post.feedPost.previous = null;
+    },
   },
 });
 
 const {
-  profilePostAdded,
+  postCreated,
   profilePostsLoaded,
   moreProfilePostsLoaded,
   profilePostFetchFailed,
+
+  feedPostsLoaded,
+  morefeedPostsLoaded,
+  feedPostFetchFailed,
 } = slice.actions;
 export default slice.reducer;
 
@@ -64,7 +92,7 @@ export const addPost = (data) => async (dispatch, getState) => {
       config
     );
     dispatch({
-      type: profilePostAdded.type,
+      type: postCreated.type,
       payload: response.data,
     });
 
@@ -102,5 +130,36 @@ export const loadMorePostsByUsername = (url) => async (dispatch, getState) => {
   } catch (error) {
     dispatch(createMessage({ fail: "Failed to load Posts." }));
     dispatch({ type: profilePostFetchFailed.type });
+  }
+};
+
+export const loadFeedPosts = () => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8000/api/post/feed",
+      tokenConfig(getState)
+    );
+
+    dispatch({
+      type: feedPostsLoaded.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(createMessage({ fail: "Failed to load Posts." }));
+    dispatch({ type: feedPostFetchFailed.type });
+  }
+};
+
+export const loadMoreFeedPosts = (url) => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(url, tokenConfig(getState));
+
+    dispatch({
+      type: morefeedPostsLoaded.type,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(createMessage({ fail: "Failed to load Posts." }));
+    dispatch({ type: feedPostFetchFailed.type });
   }
 };
