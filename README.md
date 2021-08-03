@@ -57,3 +57,24 @@ pip3 install -r requirements.txt
 pip3 freeze
 
 ```
+
+### Install Frontend dependencies
+Make sure you have node and yarn installed, if not, refer to:
+- [**Node Install Page**](https://nodejs.org/en/download/)
+- [**Yarn Install Page**](https://legacy.yarnpkg.com/lang/en/docs/install/)
+```
+yarn install
+yarn add react-scripts
+```
+
+### Run the Project
+
+For development, we need to run both frontend and backend servers
+```
+cd frontend
+yarn start
+cd ..
+cd backend
+source env/bin/activate
+python manage.py migrate
+python manage.py runserver
