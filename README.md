@@ -9,10 +9,13 @@
 - Docker
 
 ### Structure
+```
 
 Project/
 |-- backend # Django API server
 |-- frontend # ReactJS Frontend
+```
+
 
 ## Run with docker
 
