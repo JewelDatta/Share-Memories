@@ -14,4 +14,4 @@ COPY . /frontend/code/
 
 EXPOSE 3000
 
-CMD npm start
+CMD [ "npm", "start" ]
