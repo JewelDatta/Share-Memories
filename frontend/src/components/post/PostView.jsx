@@ -34,9 +34,9 @@ class PostView extends React.Component {
                   {moment(post.created_at).fromNow()}
                 </span>
               </div>
-              <div className="ml-auto user-like">
+              {/* <div className="ml-auto user-like">
                 <Heart fill="#EA5455" stroke="#EA5455" />
-              </div>
+              </div> */}
             </div>
             <p>{post.caption}</p>
             <img

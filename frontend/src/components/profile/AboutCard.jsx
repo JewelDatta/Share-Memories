@@ -8,23 +8,18 @@ class AboutCard extends React.Component {
 
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>Bio:</CardTitle>
-        </CardHeader>
+        {/* <CardHeader> */}
+        {/* <CardTitle>Bio:</CardTitle> */} {/* </CardHeader> */}
         <CardBody>
-          <p>{data.bio}</p>
-          <div className="mt-1">
-            <h6 className="mb-0">Joined:</h6>
-            <p>{moment(data.date_joined).format("MMMM-YYYY")}</p>
-          </div>
+          {/* <p>{data.bio}</p> */}
 
           <div className="mt-1">
             <h6 className="mb-0">Email:</h6>
             <p>{data.email}</p>
           </div>
           <div className="mt-1">
-            <h6 className="mb-0">Website:</h6>
-            <p>www.github.com/jeweldatta</p>
+            <h6 className="mb-0">Joined:</h6>
+            <p>{moment(data.date_joined).format("MMMM-YYYY")}</p>
           </div>
         </CardBody>
       </Card>
